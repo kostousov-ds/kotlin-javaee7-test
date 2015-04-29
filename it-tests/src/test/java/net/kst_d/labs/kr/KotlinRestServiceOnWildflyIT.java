@@ -11,7 +11,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class KotlinRestServiceOnWildflyIT {
-    @Test
+//    @Test
     public void one() throws Exception {
 	request("http://localhost:8080/kr-test/rs/one", "flow one ejb here!");
     }

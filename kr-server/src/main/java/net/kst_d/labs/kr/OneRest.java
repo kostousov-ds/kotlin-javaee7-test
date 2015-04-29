@@ -1,5 +1,6 @@
 package net.kst_d.labs.kr;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -9,7 +10,7 @@ import javax.ws.rs.Path;
 public class OneRest {
 
 
-//    @EJB
+    @EJB
     private FlowOneEjb ejb = null;
 
     @Path("/")

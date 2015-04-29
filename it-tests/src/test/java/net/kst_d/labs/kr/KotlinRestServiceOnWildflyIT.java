@@ -16,7 +16,7 @@ public class KotlinRestServiceOnWildflyIT {
 	request("http://localhost:8080/kr-test/rs/one", "flow one ejb here!");
     }
 
-    @Test
+//    @Test
     public void two() throws Exception {
 	request("http://localhost:8080/kr-test/rs/two", "flow two ejb here!");
     }

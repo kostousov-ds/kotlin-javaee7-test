@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>kotlin-rest-root</artifactId>
+        <groupId>net.kst-d.labs.kotlin-rest</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>it-tests</artifactId>
+
+    <properties>
+        <wildfly.version>8.2.0.Final</wildfly.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>kr-ear</artifactId>
+            <version>${project.parent.version}</version>
+            <type>ear</type>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>jboss-it-test</id>
+            <activation>
+                <property>
+                    <name>need.it</name>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>pl.project13.maven</groupId>
+                        <artifactId>git-commit-id-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.18.1</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <version>${cargo.plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.cargo</groupId>
+                                <artifactId>cargo-core-tools-jboss-deployer-7</artifactId>
+                                <version>${cargo.plugin.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.codehaus.cargo</groupId>
+                                <artifactId>cargo-core-tools-jboss-deployer-api</artifactId>
+                                <version>${cargo.plugin.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.wildfly</groupId>
+                                <artifactId>wildfly-controller-client</artifactId>
+                                <version>${wildfly.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>start-container</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-container</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>undeploy</goal>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <container>
+                                <containerId>wildfly8x</containerId>
+                                <artifactInstaller>
+                                    <groupId>org.wildfly</groupId>
+                                    <artifactId>wildfly-dist</artifactId>
+                                    <version>${wildfly.version}</version>
+                                </artifactInstaller>
+                                <!--<type>remote</type>-->
+                            </container>
+
+                            <configuration>
+                                <type>standalone</type>
+                                <properties>
+                                    <cargo.hostname>localhost</cargo.hostname>
+                                    <cargo.jboss.management-http.port>9990</cargo.jboss.management-http.port>
+                                </properties>
+                            </configuration>
+
+                            <deployer>
+                                <type>installed</type>
+                                <!--<type>remote</type>-->
+                            </deployer>
+
+                            <deployables>
+                                <deployable>
+                                    <!-- Модуль - точка входа для партнёров -->
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>kr-ear</artifactId>
+                                    <type>ear</type>
+                                    <pingURL>http://localhost:8080/${application.web.uri}/index.html</pingURL>
+                                    <pingTimeout>30000</pingTimeout>
+                                </deployable>
+                            </deployables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+    </profiles>
+
+
+</project>

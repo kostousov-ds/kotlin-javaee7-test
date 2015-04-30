@@ -1,11 +1,13 @@
 package net.kst_d.labs.kr
 
+import javax.ejb.Stateless
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 
 
 Path("/two")
-public class FlowTwoRest {
+Stateless
+open class FlowTwoRest {
 
     private val ejb: TwoEjb? = null
 

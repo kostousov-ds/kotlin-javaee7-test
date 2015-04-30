@@ -11,7 +11,7 @@ Stateless
 open class FlowTwoRest {
 
     EJB
-    private val ejb: TwoEjb? = null
+    var ejb: TwoEjb? = null
 
 
     Path("/")

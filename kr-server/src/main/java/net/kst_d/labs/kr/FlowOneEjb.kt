@@ -5,7 +5,7 @@ import javax.ejb.Stateless
 
 
 Stateless
-public class FlowOneEjb {
+open class FlowOneEjb {
 
 
     public fun method() : String{

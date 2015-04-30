@@ -5,23 +5,23 @@ import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-@Path("/one")
+@Path ("/three")
 @Stateless
-public class OneRest {
-
+public class ThreeRest {
 
     @EJB
-    private FlowOneEjb ejb = null;
+    private TwoEjb ejb;
 
-    @Path("/")
+    @Path ("/")
     @GET
     public String get() {
 	if (ejb != null) {
 	    return ejb.method();
-	}else {
+	} else {
 	    return "No EJB Found";
 	}
 
     }
+
 
 }
